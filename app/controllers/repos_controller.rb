@@ -1,6 +1,7 @@
 class ReposController < ApplicationController
   before_action :set_repo, only: [:events, :show, :update, :destroy]
 
+  # GET /repos/1/events
   def events
     @events = @repo.events
 

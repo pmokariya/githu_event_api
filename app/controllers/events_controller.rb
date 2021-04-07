@@ -10,12 +10,14 @@ class EventsController < ApplicationController
 
   # GET /events/1
   def show
+    render json: { error: "Couldn't find Event with 'id'=#{params[:id]}"}, status: "404" and return if @event.nil?
     render json: @event
   end
 
   # POST /events
   def create
     @event = Event.new(event_params)
+    render json: { error: "Given event type is invalid"}, status: "400" and return if @event.event_type.present? && !@event.event_type.in?(Constant::EVENT_TYPES)
 
     if @event.save
       render json: @event, status: :created, location: @event
@@ -41,7 +43,7 @@ class EventsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_event
-      @event = Event.find(params[:id])
+      @event = Event.find_by(id: params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
